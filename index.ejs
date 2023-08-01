@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body class="container">
+
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Thêm sinh viên</button>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Thêm sinh viên</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form action="/add_sv" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="email">Tên:</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Tuổi</label>:</label>
+                            <input type="number" name="price" class="form-control" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Mssv:</label>
+                            <input type="text" name="quantity" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Quê quán:</label>
+                            <input type="text" class="form-control" name="color">
+                        </div>
+                        <div class="form-group">
+                            <input type="file" name="image">
+                        </div>
+
+                        <button type="submit"
+                            style="background-color: aqua; color: white; padding: 5px; border: 0px solid; border-radius: 5px;">ADD</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tên</th>
+                    <th>Tuổi</th>
+                    <th>Mssv</th>
+                    <th>Quê quán</th>
+                    <th>Avatar</th>
+            </thead>
+            <tbody>
+                <% sinhvien.forEach(function(sv) { %>
+                    <tr>
+                        <td>
+                            <%= sv._id %>
+                        </td>
+                        <td>
+                            <%= sv.name %>
+                        </td>
+                        <td>
+                            <%= sv.price %>
+                        </td>
+                        <td>
+                            <%= sv.quantity %>
+                        </td>
+                        <td>
+                            <%= sv.color %>
+                        </td>
+                        <td>
+                            <img src="<%= sv.image %>" width="100" ; height="100">
+                        </td>
+                        <td class="row">
+                            <!-- Trigger the modal with a button -->
+                            <button style="background-color: red; color: white; border: 0px solid; border-radius: 5px;"
+                                type="button" data-toggle="modal" data-target="#myModal1">Delete</button>
+
+                            <!-- Modal -->
+                            <div id="myModal1" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <h2 style="color: aqua;">Bạn có chắc muốn xóa</h2>
+
+                                        <div class="row" style="margin: auto;">
+
+                                            <button class="btn btn-default"
+                                                style="background-color: aqua; color: white;"
+                                                onclick="deleteSV('<%= sv._id %>')">Yes</button>
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">No</button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td class="row">
+                            <!-- Trigger the modal with a button -->
+                            <button style="background-color: rgb(0, 153, 255); color: white; border: 0px solid; border-radius: 5px;"
+                                type="button" data-toggle="modal" data-target="#myModal2">Edit</button>
+
+                            <!-- Modal -->
+                            <div id="myModal2" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Sửa thông tin</h4>
+                                        </div>
+                        
+                                        <div class="modal-body">
+                                            <form action="/update_sv/<%= sv._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                                                <input type="text" name="name" value="<%= sv.name %>">
+                                                <input type="number" name="price" value="<%= sv.price %>">
+                                                <input type="number" name="quantity" value="<%= sv.quantity %>">
+                                                <input type="text" name="color" value="<%= sv.color %>">
+                                                <input type="file" name="image">
+                                                <button type="submit">Cập nhật</button>
+                                              </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+<script>
+    function deleteSV(id) {
+        fetch(`/sv/${id}`, { method: 'DELETE' })
+            .then(() => {
+                console.log(`sv ${id} deleted`);
+                location.reload();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+   
+</script>
+
+</html>
